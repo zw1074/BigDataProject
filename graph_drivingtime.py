@@ -1,0 +1,60 @@
+#!/usr/bin/python
+import matplotlib.pyplot as plt
+import seaborn as sns
+def data_graph(data_parse, month):
+	plt.figure(figsize=(20, 16)) 
+	ax = plt.subplot(211)
+	ax.plot(range(24), data_parse[month]['0']['index'], color = 'mediumpurple', ls = '--', label = 'Good Weather Index', linewidth = 4)
+	ax.plot(range(24), data_parse[month]['1']['index'], color = 'r', ls = '--', label = 'Bad Weather Index', linewidth = 4)
+	ax2 = ax.twinx()
+	ax2.plot(range(24), data_parse[month]['0']['drivetime'], color = 'mediumpurple', label = 'Trip Duration (Good Weather)', linewidth = 4)
+	ax2.plot(range(24), data_parse[month]['1']['drivetime'], color = 'r', label = 'Trip Duration (Bad Weather)', linewidth = 4)
+	ax.legend(loc=1)
+	ax2.legend(loc=2)
+	ax.grid()
+	ax.set_xlabel("Time of Day", fontsize = 16)
+	ax.set_ylabel("Index", fontsize = 16)
+	ax2.set_ylabel("Trip Duration", fontsize = 16)
+	ax.set_title('Index and Trip Duration on Weekdays in ' + month, fontsize = 26)
+	ax3 = plt.subplot(212)
+	ax3.plot(range(24), data_parse[month]['0']['index'], color = 'mediumpurple', ls = '--', label = 'Good Weather Index', linewidth = 4)
+	ax3.plot(range(24), data_parse[month]['1']['index'], color = 'r', ls = '--', label = 'Bad Weather Index', linewidth = 4)
+	ax4 = ax3.twinx()
+	ax4.plot(range(24), data_parse[month]['0']['trip'], color = 'mediumpurple', label = 'Number of Trips (Good Weather)', linewidth = 4)
+	ax4.plot(range(24), data_parse[month]['1']['trip'], color = 'r', label = 'Number of Trips (Bad Weather)', linewidth = 4)
+	ax3.legend(loc=1)
+	ax4.legend(loc=2)
+	ax3.grid()
+	ax3.set_xlabel("Time of Day", fontsize = 16)
+	ax3.set_ylabel("Index", fontsize = 16)
+	ax4.set_ylabel("Number of Trips", fontsize = 16)
+	ax3.set_title('Index and Number of Trips on Weekdays in ' + month, fontsize = 26)
+	# ax5 = plt.subplot(313)
+	# ax5.plot(range(24), data_parse[month]['0']['trip'], color = 'r', label = 'good trip')
+	# ax5.plot(range(24), data_parse[month]['1']['trip'], color = 'y', label = 'bad trip')
+	# ax6 = ax5.twinx()
+	# ax6.plot(range(24), data_parse[month]['0']['drivetime'], color = 'g', label = 'good drivetime')
+	# ax6.plot(range(24), data_parse[month]['1']['drivetime'], color = 'b', label = 'bad drivetime')
+	# ax5.legend(loc='best')
+	# ax6.legend(loc='best')
+	# ax5.grid()
+	# ax5.set_xlabel("Hours")
+	# ax5.set_ylabel("Trip")
+	# ax6.set_ylabel("Drivetime")
+	# ax5.set_title('Trip and citi bike drivetime in ' + month)
+	# plt.legend(loc='best')
+	plt.savefig('try.png')
+
+with open('result_drivingtime_member.txt') as fobj:
+	data_init = fobj.readlines()
+data_parse = {}
+for line in data_init:
+	line = line.strip()
+	key, value = line.split('\t')
+	data_parse.setdefault(key, {})
+	badorgood = value.split(';')
+	data_parse[key].setdefault(badorgood[0], {})
+	data_parse[key][badorgood[0]]['index'] = [float(i) for i in badorgood[1].split(',')]
+	data_parse[key][badorgood[0]]['drivetime'] = [float(i) for i in badorgood[2].split(',')]
+	data_parse[key][badorgood[0]]['trip'] = [float(i) for i in badorgood[3].split(',')]
+print("Finish loading!")
