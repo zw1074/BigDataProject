@@ -9,7 +9,7 @@ echo "Transfer data to hadoop server"
 hfs -copyFromLocal -f ./*.* /user/zw1074/
 
 echo "Starting Mission 1: Index"
-echo "Mission 1: Index" > log.txt
+echo "Mission 1: Index" >> log.txt
 hjs -D mapreduce.job.reduces=3 -files mapper.py,reducer.py -mapper mapper.py -reducer reducer.py -input /user/zw1074/weather-data.txt -output /user/zw1074/index.output >> log.txt
 echo "Finished!"
 
